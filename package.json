@@ -1,0 +1,46 @@
+{
+    "name": "@thinking-home/ui",
+    "version": "0.0.37",
+    "private": false,
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "bin": {
+        "moo": "bin/moo"
+    },
+    "scripts": {
+        "build:lib": "webpack",
+        "build:tools": "tsc --declaration --outDir dist",
+        "build": "rm -rf dist && npm run build:lib && npm run build:tools",
+        "prepublishOnly": "npm run build",
+        "go": "git add . && git commit -m \"tmp\" && npm version patch && npm publish"
+    },
+    "license": "MIT",
+    "peerDependencies": {
+        "io-ts": "^2.2.18",
+        "history": "^5.3.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router": "^6.6.1",
+        "react-router-dom": "^6.6.1",
+        "webpack": "^5.74.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.17",
+        "@types/react-dom": "^18.0.10",
+        "io-ts": "^2.2.18",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.4",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1",
+        "history": "^5.3.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router": "^6.6.1",
+        "react-router-dom": "^6.6.1"
+    },
+    "dependencies": {
+        "css-loader": "^6.7.1",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^9.4.2"
+    }
+}
