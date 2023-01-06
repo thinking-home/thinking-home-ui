@@ -1,12 +1,12 @@
 import { Configuration } from "webpack";
 
 export const externals: Configuration["externals"] = {
-    "react": "thReact",
-    "react-dom/client": "thReactDOMClient",
-    "react-router": "thReactRouter",
-    "react-router-dom": "thReactRouterDOM",
-    "history": "thHistory",
-    "@thinking-home/ui": "ThinkingHomeUi",
+  react: "thReact",
+  "react-dom/client": "thReactDOMClient",
+  "react-router": "thReactRouter",
+  "react-router-dom": "thReactRouterDOM",
+  history: "thHistory",
+  "@thinking-home/ui": "ThinkingHomeUi",
 };
 
 export const externalsType: Configuration["externalsType"] = "window";
@@ -29,12 +29,21 @@ export const resolve: Configuration["resolve"] = {
   extensions: [".tsx", ".ts", ".js"],
 };
 
+const isProduction = (process.env["NODE_ENV"] || "production") === "production";
+
+export const mode: Configuration["mode"] = isProduction
+  ? "production"
+  : "development";
+
+export const devtool = isProduction ? undefined : "inline-source-map";
+
 export function initWebpackConfig(
   entry: Configuration["entry"],
   path: string
 ): Configuration {
   return {
-    mode: "production",
+    mode,
+    devtool,
     entry,
     externals,
     externalsType,
