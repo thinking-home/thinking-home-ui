@@ -1,4 +1,15 @@
 import { Configuration } from "webpack";
+import parse from "minimist";
+
+const args = parse(process.argv.slice(1));
+
+const isProduction = (args["mode"] || "production") === "production";
+
+export const mode: Configuration["mode"] = isProduction
+  ? "production"
+  : "development";
+
+export const devtool = isProduction ? undefined : "inline-source-map";
 
 export const externals: Configuration["externals"] = {
   react: "thReact",
@@ -28,14 +39,6 @@ export const module: Configuration["module"] = {
 export const resolve: Configuration["resolve"] = {
   extensions: [".tsx", ".ts", ".js"],
 };
-
-const isProduction = (process.env["NODE_ENV"] || "production") === "production";
-
-export const mode: Configuration["mode"] = isProduction
-  ? "production"
-  : "development";
-
-export const devtool = isProduction ? undefined : "inline-source-map";
 
 export function initWebpackConfig(
   entry: Configuration["entry"],
