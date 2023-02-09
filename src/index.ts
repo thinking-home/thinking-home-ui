@@ -1,4 +1,9 @@
-import React, { ComponentType, createContext, useContext } from "react";
+import React, {
+  ComponentType,
+  createContext,
+  useContext,
+  useEffect,
+} from "react";
 import ReactDOMClient from "react-dom/client";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDOM from "react-router-dom";
@@ -30,10 +35,28 @@ export interface ApiClient {
   ): Promise<T>;
 }
 
+export type MessageHubCallback<T> = (
+  topic: string,
+  guid: string,
+  timestamp: string,
+  data: T
+) => void;
+
+export interface MessageHub {
+  send(): Promise<void>;
+  subscribe<T>(
+    topic: string,
+    decoder: Decoder<unknown, T>,
+    callback: MessageHubCallback<T>,
+    handleError: MessageHubCallback<unknown>
+  ): () => void;
+}
+
 // APP CONTEXT
 export interface AppContext {
   lang: string;
   api: ApiClient;
+  messageHub: MessageHub;
 }
 
 const context = createContext<AppContext | undefined>(undefined);
@@ -48,6 +71,20 @@ export const useAppContext = (): AppContext => {
   }
 
   return value;
+};
+
+export const useMessageHandler = <T>(
+  topic: string,
+  decoder: Decoder<unknown, T>,
+  callback: MessageHubCallback<T>,
+  handleError: MessageHubCallback<unknown>
+): void => {
+  const { messageHub } = useAppContext();
+
+  useEffect(
+    () => messageHub.subscribe(topic, decoder, callback, handleError),
+    [messageHub, topic, decoder, callback, handleError]
+  );
 };
 
 // MODULE
