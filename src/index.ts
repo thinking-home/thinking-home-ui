@@ -9,6 +9,7 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDOM from "react-router-dom";
 import * as History from "history";
 import { Decoder } from "io-ts/Decoder";
+import { ToastContent, ToastOptions } from 'react-toastify';
 
 // HTTP CLIENT
 export type PlainObject = Record<
@@ -43,13 +44,24 @@ export type MessageHubCallback<T> = (
 ) => void;
 
 export interface MessageHub {
-  send(): Promise<void>;
+  send<T>(topic: string, data: T): Promise<void>;
   subscribe<T>(
     topic: string,
     decoder: Decoder<unknown, T>,
     callback: MessageHubCallback<T>,
-    handleError: MessageHubCallback<unknown>
+    handleError?: MessageHubCallback<unknown>
   ): () => void;
+}
+
+
+export type ShowToastFn = (content: ToastContent, options?: ToastOptions) => void;
+
+export interface Toaster {
+    default: ShowToastFn;
+    info: ShowToastFn;
+    error(): ShowToastFn;
+    warning(): ShowToastFn;
+    success(): ShowToastFn;
 }
 
 // APP CONTEXT
@@ -57,6 +69,7 @@ export interface AppContext {
   lang: string;
   api: ApiClient;
   messageHub: MessageHub;
+  toaster: Toaster;
 }
 
 const context = createContext<AppContext | undefined>(undefined);
@@ -77,7 +90,7 @@ export const useMessageHandler = <T>(
   topic: string,
   decoder: Decoder<unknown, T>,
   callback: MessageHubCallback<T>,
-  handleError: MessageHubCallback<unknown>
+  handleError?: MessageHubCallback<unknown>
 ): void => {
   const { messageHub } = useAppContext();
 
