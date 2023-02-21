@@ -9,7 +9,7 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDOM from "react-router-dom";
 import * as History from "history";
 import { Decoder } from "io-ts/Decoder";
-import { ToastContent, ToastOptions } from 'react-toastify';
+import { ToastContent, ToastOptions, Id } from "react-toastify";
 
 // HTTP CLIENT
 export type PlainObject = Record<
@@ -53,15 +53,14 @@ export interface MessageHub {
   ): () => void;
 }
 
-
-export type ShowToastFn = (content: ToastContent, options?: ToastOptions) => void;
+export type ShowToastFn = (content: ToastContent, options?: ToastOptions) => Id;
 
 export interface Toaster {
-    default: ShowToastFn;
-    info: ShowToastFn;
-    error(): ShowToastFn;
-    warning(): ShowToastFn;
-    success(): ShowToastFn;
+  show: ShowToastFn;
+  showInfo: ShowToastFn;
+  showError: ShowToastFn;
+  showWarning: ShowToastFn;
+  showSuccess: ShowToastFn;
 }
 
 // APP CONTEXT
