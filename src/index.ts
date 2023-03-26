@@ -1,6 +1,7 @@
 import React, {
   ComponentType,
   createContext,
+  useCallback,
   useContext,
   useEffect,
 } from "react";
@@ -49,7 +50,6 @@ export interface MessageHub {
     topic: string,
     decoder: Decoder<unknown, T>,
     callback: MessageHubCallback<T>,
-    handleError?: MessageHubCallback<unknown>
   ): () => void;
 }
 
@@ -89,13 +89,15 @@ export const useMessageHandler = <T>(
   topic: string,
   decoder: Decoder<unknown, T>,
   callback: MessageHubCallback<T>,
-  handleError?: MessageHubCallback<unknown>
+  deps: unknown[],
 ): void => {
   const { messageHub } = useAppContext();
 
+  const handler = useCallback(callback, deps);
+
   useEffect(
-    () => messageHub.subscribe(topic, decoder, callback, handleError),
-    [messageHub, topic, decoder, callback, handleError]
+    () => messageHub.subscribe(topic, decoder, handler),
+    [messageHub, topic, decoder, handler]
   );
 };
 
