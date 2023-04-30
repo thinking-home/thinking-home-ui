@@ -29,11 +29,16 @@ export type QueryData =
 export interface ApiClient {
   get<T>(
     decoder: Decoder<unknown, T>,
-    query: { url: string; params?: QueryParams }
+    query: { url: string; params?: QueryParams; signal?: AbortSignal }
   ): Promise<T>;
   post<T>(
     decoder: Decoder<unknown, T>,
-    query: { url: string; params?: QueryParams; data: QueryData }
+    query: {
+      url: string;
+      params?: QueryParams;
+      data: QueryData;
+      signal?: AbortSignal;
+    }
   ): Promise<T>;
 }
 
