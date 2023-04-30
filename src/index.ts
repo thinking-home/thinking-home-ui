@@ -12,7 +12,7 @@ import * as History from "history";
 import { Decoder } from "io-ts/Decoder";
 import { ToastContent, ToastOptions, Id } from "react-toastify";
 
-// HTTP CLIENT
+// http client
 export type PlainObject = Record<
   string,
   string | number | boolean | null | undefined
@@ -37,22 +37,24 @@ export interface ApiClient {
   ): Promise<T>;
 }
 
-export type MessageHubCallback<T> = (
-  topic: string,
-  guid: string,
-  timestamp: string,
-  data: T
-) => void;
+// message hub
+export interface ReceivedMessage<T> {
+  topic: string;
+  guid: string;
+  timestamp: string;
+  data: T;
+}
 
 export interface MessageHub {
   send<T>(topic: string, data: T): Promise<void>;
   subscribe<T>(
     topic: string,
     decoder: Decoder<unknown, T>,
-    callback: MessageHubCallback<T>,
+    callback: (msg: ReceivedMessage<T>) => void
   ): () => void;
 }
 
+// toaster
 export type ShowToastFn = (content: ToastContent, options?: ToastOptions) => Id;
 
 export interface Toaster {
@@ -63,7 +65,7 @@ export interface Toaster {
   showSuccess: ShowToastFn;
 }
 
-// APP CONTEXT
+// application context
 export interface AppContext {
   lang: string;
   api: ApiClient;
@@ -88,8 +90,8 @@ export const useAppContext = (): AppContext => {
 export const useMessageHandler = <T>(
   topic: string,
   decoder: Decoder<unknown, T>,
-  callback: MessageHubCallback<T>,
-  deps: unknown[],
+  callback: (msg: ReceivedMessage<T>) => void,
+  deps: unknown[]
 ): void => {
   const { messageHub } = useAppContext();
 
@@ -101,7 +103,7 @@ export const useMessageHandler = <T>(
   );
 };
 
-// MODULE
+// modules
 export class UiModule {
   constructor(public readonly Component: ComponentType) {}
 }
