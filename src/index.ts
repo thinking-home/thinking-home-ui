@@ -12,6 +12,8 @@ import * as History from "history";
 import { Decoder } from "io-ts/Decoder";
 import { ToastContent, ToastOptions, Id } from "react-toastify";
 
+export * from './logger';
+
 // http client
 export type PlainObject = Record<
   string,
