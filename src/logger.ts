@@ -29,8 +29,8 @@ export type LogMethod = {
   ): void;
 };
 
-export interface Logger {
-  log<T extends string = string>(
+export abstract class Logger {
+  abstract log<T extends string = string>(
     level: LogLevel,
     template: string,
     a?: T extends `${string}%${string}` ? LoggerArgument : never,
@@ -41,12 +41,20 @@ export interface Logger {
     f?: LoggerArgument
   ): void;
 
-  trace: LogMethod;
-  debug: LogMethod;
-  info: LogMethod;
-  warn: LogMethod;
-  error: LogMethod;
-  fatal: LogMethod;
+  abstract child<T extends Record<string, unknown>>(context: T): Logger;
+
+  trace: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Trace, t, a, b, c, d, e, f);
+  debug: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Debug, t, a, b, c, d, e, f);
+  info: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Information, t, a, b, c, d, e, f);
+  warn: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Warning, t, a, b, c, d, e, f);
+  error: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Error, t, a, b, c, d, e, f);
+  fatal: LogMethod = (t, a, b, c, d, e, f) =>
+    this.log(LogLevel.Fatal, t, a, b, c, d, e, f);
 }
 
 const context = createContext<Logger | undefined>(undefined);
