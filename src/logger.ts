@@ -17,6 +17,20 @@ export enum LogLevel {
 
 export type LoggerArgument = boolean | number | string | null;
 
+export type JsonValue =
+  | JsonObject
+  | JsonValue[]
+  | boolean
+  | number
+  | string
+  | readonly JsonValue[]
+  | null
+  | undefined;
+
+export type JsonObject = {
+  [k: string]: JsonValue;
+};
+
 export type LogMethod = {
   <T extends string = string>(
     template: string,
@@ -41,7 +55,7 @@ export abstract class Logger {
     f?: LoggerArgument
   ): void;
 
-  abstract child<T extends Record<string, unknown>>(context: T): Logger;
+  abstract child<T extends JsonObject>(context: T): Logger;
 
   trace: LogMethod = (t, a, b, c, d, e, f) =>
     this.log(LogLevel.Trace, t, a, b, c, d, e, f);
