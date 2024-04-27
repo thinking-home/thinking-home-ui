@@ -17,6 +17,7 @@ export const externals: Configuration["externals"] = {
   "react-router": "thReactRouter",
   "react-router-dom": "thReactRouterDOM",
   history: "thHistory",
+  "@thinking-home/i18n": "thI18n",
   "@thinking-home/ui": "ThinkingHomeUi",
 };
 

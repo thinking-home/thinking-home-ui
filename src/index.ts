@@ -9,10 +9,12 @@ import ReactDOMClient from "react-dom/client";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDOM from "react-router-dom";
 import * as History from "history";
+import * as I18n from "@thinking-home/i18n";
 import { Decoder } from "io-ts/Decoder";
 import { ToastContent, ToastOptions, Id } from "react-toastify";
 
-export * from './logger';
+export * from "./i18n";
+export * from "./logger";
 
 // http client
 export type PlainObject = Record<
@@ -121,6 +123,7 @@ export function createModule(component: ComponentType) {
 
 declare global {
   interface Window {
+    thI18n: unknown;
     thReact: unknown;
     thReactDOMClient: unknown;
     thReactRouter: unknown;
@@ -129,6 +132,7 @@ declare global {
   }
 }
 
+window.thI18n = I18n;
 window.thReact = React;
 window.thReactDOMClient = ReactDOMClient;
 window.thReactRouter = ReactRouter;
